@@ -15,7 +15,19 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/amazona');
+const uri ='mongodb+srv://onecharity:Growth@cluster0.jal1vuy.mongodb.net/charitydata?retryWrites=true&w=majority'
+
+async function connect(){
+  try {
+    await mongoose.connect(uri)
+    console.log("Connected to MongoDB")
+  } catch (error) {
+    console.error(error);
+  }
+}
+connect()
+
+
 app.use('/api/uploads', uploadRouter);
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
@@ -114,10 +126,9 @@ io.on('connection', (socket) => {
   });
 });
 
-httpServer.listen(port, () => {
-  console.log(`Serve at http://localhost:${port}`);
+app.listen(8000, () => {
+  console.log("Server started on port 8000");
 });
-
 // app.listen(port, () => {
 //   console.log(`Serve at http://localhost:${port}`);
 // });
